@@ -1,0 +1,49 @@
+[project]
+name = "matricula-service"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "django==5.1.4",
+    "djangorestframework==3.15.2",
+    "drf-spectacular==0.28.0",   # Genera Swagger/OpenAPI para Django (FastAPI lo hace automático)
+    "psycopg2-binary==2.9.10",   # Driver PostgreSQL
+    "django-environ==0.11.2",    # Leer variables de entorno
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-django==4.9.0",      # Plugin pytest para Django
+    "pytest-cov==6.0.0",
+    "testcontainers[postgres]==4.9.0",
+    "ruff==0.8.4",
+    "mypy==1.13.0",
+    "django-stubs[compatible-mypy]==5.1.1",         # Tipos de Django para mypy
+    "djangorestframework-stubs==3.15.1",  # Tipos de DRF para mypy
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["B008", "N805"]  # N805: no aplica a métodos de ViewSet
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/migrations/*", "*/tests/*", "manage.py"]

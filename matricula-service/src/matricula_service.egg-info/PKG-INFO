@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: matricula-service
+Version: 1.0.0
+Requires-Python: >=3.12
+Requires-Dist: django==5.1.4
+Requires-Dist: djangorestframework==3.15.2
+Requires-Dist: drf-spectacular==0.28.0
+Requires-Dist: psycopg2-binary==2.9.10
+Requires-Dist: django-environ==0.11.2
+Provides-Extra: dev
+Requires-Dist: pytest==8.3.4; extra == "dev"
+Requires-Dist: pytest-django==4.9.0; extra == "dev"
+Requires-Dist: pytest-cov==6.0.0; extra == "dev"
+Requires-Dist: testcontainers[postgres]==4.9.0; extra == "dev"
+Requires-Dist: ruff==0.8.4; extra == "dev"
+Requires-Dist: mypy==1.13.0; extra == "dev"
+Requires-Dist: django-stubs[compatible-mypy]==5.1.1; extra == "dev"
+Requires-Dist: djangorestframework-stubs==3.15.1; extra == "dev"

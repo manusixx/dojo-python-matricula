@@ -1,0 +1,4 @@
+config
+cursos
+estudiantes
+manage
