@@ -18,6 +18,20 @@ jobs:
     defaults:
       run:
         working-directory: profesor-service  # Todos los comandos desde esta carpeta
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: profesor_db
+          POSTGRES_USER: profesor_user
+          POSTGRES_PASSWORD: profesor_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -61,6 +75,20 @@ jobs:
     defaults:
       run:
         working-directory: matricula-service
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: matricula_db
+          POSTGRES_USER: matricula_user
+          POSTGRES_PASSWORD: matricula_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
