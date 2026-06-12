@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/app
+            cd ~/dojo_python
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/profesor-service:latest
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/matricula-service:latest
             docker compose -f docker-compose.prod.yml down --remove-orphans || true
