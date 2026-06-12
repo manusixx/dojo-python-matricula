@@ -1,0 +1,17 @@
+pyproject.toml
+src/__init__.py
+src/profesor/__init__.py
+src/profesor/config.py
+src/profesor/crud.py
+src/profesor/database.py
+src/profesor/exceptions.py
+src/profesor/main.py
+src/profesor/models.py
+src/profesor/schemas.py
+src/profesor/routers/__init__.py
+src/profesor/routers/profesores.py
+src/profesor_service.egg-info/PKG-INFO
+src/profesor_service.egg-info/SOURCES.txt
+src/profesor_service.egg-info/dependency_links.txt
+src/profesor_service.egg-info/requires.txt
+src/profesor_service.egg-info/top_level.txt

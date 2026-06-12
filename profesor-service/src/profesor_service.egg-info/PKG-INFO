@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: profesor-service
+Version: 1.0.0
+Requires-Python: >=3.12
+Requires-Dist: fastapi==0.115.5
+Requires-Dist: uvicorn[standard]==0.32.1
+Requires-Dist: sqlalchemy==2.0.36
+Requires-Dist: alembic==1.14.0
+Requires-Dist: psycopg2-binary==2.9.10
+Requires-Dist: pydantic[email]==2.10.3
+Requires-Dist: pydantic-settings==2.6.1
+Provides-Extra: dev
+Requires-Dist: pytest==8.3.4; extra == "dev"
+Requires-Dist: pytest-cov==6.0.0; extra == "dev"
+Requires-Dist: httpx==0.28.1; extra == "dev"
+Requires-Dist: testcontainers[postgres]==4.9.0; extra == "dev"
+Requires-Dist: ruff==0.8.4; extra == "dev"
+Requires-Dist: mypy==1.13.0; extra == "dev"
+Requires-Dist: types-psycopg2==2.9.21.20241019; extra == "dev"

@@ -1,0 +1,118 @@
+name: CI — Integración Continua
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+
+  # ── Job 1: validar el profesor-service (FastAPI) ──────────────────────────
+  profesor-service:
+    name: profesor-service — ruff / mypy / pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: profesor-service  # Todos los comandos desde esta carpeta
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias de desarrollo
+        run: pip install -e '.[dev]'
+
+      - name: ruff lint — verificar errores de código
+        run: ruff check src tests
+
+      - name: ruff format — verificar formato
+        run: ruff format --check src tests
+
+      - name: mypy — verificar tipos estáticos
+        run: mypy src
+
+      - name: pytest unitarios — tests sin Docker
+        run: pytest tests/unit -v --cov=src --cov-report=xml
+
+      - name: pytest integración — tests con PostgreSQL real
+        run: pytest tests/integration -v
+
+      - name: Verificar cobertura >= 80%
+        run: pytest --cov=src --cov-fail-under=80
+
+      - name: Subir reporte de cobertura como artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-profesor
+          path: profesor-service/coverage.xml
+
+  # ── Job 2: validar el matricula-service (Django) ──────────────────────────
+  matricula-service:
+    name: matricula-service — ruff / mypy / pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: matricula-service
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias de desarrollo
+        run: pip install -e '.[dev]'
+
+      - name: ruff lint
+        run: ruff check src tests
+
+      - name: ruff format check
+        run: ruff format --check src tests
+
+      - name: mypy
+        run: mypy src
+
+      - name: pytest con cobertura
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings
+        run: pytest --cov=src --cov-report=xml --cov-fail-under=80
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-matricula
+          path: matricula-service/coverage.xml
+
+  # ── Job 3: SonarCloud (solo si CI pasa) ───────────────────────────────────
+  sonar:
+    name: SonarCloud — Análisis de calidad
+    needs: [profesor-service, matricula-service]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-profesor
+          path: profesor-service/
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-matricula
+          path: matricula-service/
+
+      - uses: SonarSource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io

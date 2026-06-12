@@ -1,0 +1,49 @@
+[project]
+name = "profesor-service"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.5",
+    "uvicorn[standard]==0.32.1",    # Servidor ASGI para correr FastAPI
+    "sqlalchemy==2.0.36",           # ORM equivalente a JPA/Hibernate
+    "alembic==1.14.0",              # Migraciones de BD (equivalente a Flyway)
+    "psycopg2-binary==2.9.10",      # Driver PostgreSQL
+    "pydantic[email]==2.10.3",      # Validación de datos + soporte EmailStr (requiere email-validator)
+    "pydantic-settings==2.6.1",     # Leer variables de entorno (.env)
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",            # Cobertura de código
+    "httpx==0.28.1",                # Cliente HTTP para tests (TestClient de FastAPI lo requiere)
+    "testcontainers[postgres]==4.9.0", # PostgreSQL real en tests de integración
+    "ruff==0.8.4",                  # Linting + formato (reemplaza flake8 + black + isort)
+    "mypy==1.13.0",                 # Verificación de tipos estáticos
+    "types-psycopg2==2.9.21.20241019", # Stubs de tipos para psycopg2
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# E,F,W: errores básicos | I: imports ordenados | N: nombres | UP: modernizar | B: bugs | C4: comprehensions
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["B008"]  # B008: no aplica en FastAPI (Depends() es un pattern válido)
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]  # Permite importar desde src/ sin instalar el paquete
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/alembic/*"]
+
+[tool.coverage.report]
+fail_under = 80  # El build falla si la cobertura baja del 80%
